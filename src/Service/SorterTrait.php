@@ -16,11 +16,7 @@ trait SorterTrait
      */
     protected function sortTerritoriesByName(array $territories): array
     {
-        if (class_exists(Collator::class)) {
-            return $this->sortTerritoriesByNameWithCollator($territories);
-        }
-
-        return $this->sortTerritoriesByNameWithoutCollator($territories);
+        return class_exists(Collator::class) ? $this->sortTerritoriesByNameWithCollator($territories) : $this->sortTerritoriesByNameWithoutCollator($territories);
     }
 
     /**
@@ -34,7 +30,7 @@ trait SorterTrait
         $collator->setStrength(Collator::SECONDARY);
 
         usort($territories, static function (Territory $a, Territory $b) use ($collator): int {
-            return $collator->compare($a->getName(), $b->getName());
+            return $collator->compare((string) $a, (string) $b);
         });
 
         return $territories;
@@ -47,10 +43,35 @@ trait SorterTrait
      */
     protected function sortTerritoriesByNameWithoutCollator(array $territories): array
     {
-        usort($territories, static function (Territory $a, Territory $b): int {
-            return strcasecmp($a->getName(), $b->getName());
+        $map = static::getMultibyteToAsciiMap();
+        usort($territories, static function (Territory $a, Territory $b) use ($map): int {
+            return strcasecmp(
+                strtr((string) $a, $map),
+                strtr((string) $b, $map)
+            );
         });
 
         return $territories;
+    }
+
+    protected static function getMultibyteToAsciiMap(): array
+    {
+        return [
+            "\u{e0}" => 'a',
+            "\u{e2}" => 'a',
+            "\u{e7}" => 'c',
+            "\u{10d}" => 'c',
+            "\u{e8}" => 'e',
+            "\u{e9}" => 'e',
+            "\u{ea}" => 'e',
+            "\u{ec}" => 'i',
+            "\u{f2}" => 'o',
+            "\u{f6}" => 'o',
+            "\u{f4}" => 'o',
+            "\u{f9}" => 'u',
+            "\u{fc}" => 'u',
+            "\u{df}" => 'ss',
+            "\u{17e}" => 'z',
+        ];
     }
 }
