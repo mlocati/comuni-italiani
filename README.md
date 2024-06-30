@@ -1,4 +1,5 @@
 [![Tests](https://github.com/mlocati/comuni-italiani/actions/workflows/tests.yml/badge.svg)](https://github.com/mlocati/comuni-italiani/actions/workflows/tests.yml)
+[![Coverage](https://coveralls.io/repos/github/mlocati/comuni-italiani/badge.svg?branch=main)](https://coveralls.io/github/mlocati/comuni-italiani?branch=main)
 
 ## Comuni Italiani
 

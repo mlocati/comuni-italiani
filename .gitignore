@@ -3,3 +3,6 @@
 /composer.lock
 /.php-cs-fixer.cache
 /.phpunit.result.cache
+/coverage.json
+/coverage.xml
+/php-coveralls.phar
