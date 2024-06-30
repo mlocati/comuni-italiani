@@ -12,10 +12,23 @@ use MLocati\ComuniItaliani\TerritoryWithChildren;
 use MLocati\ComuniItaliani\Region;
 use MLocati\ComuniItaliani\Province;
 use MLocati\ComuniItaliani\GeographicalSubdivision;
+use MLocati\ComuniItaliani\Service\SorterTrait;
 
 class PropertiesTest extends TerritoryTestCase
 {
-    private const RX_VALID_NAMES = '{^\p{L}[\p{L} \-\/\'.]*\p{L}\'?$}u';
+    use SorterTrait;
+
+    private static string $rxValidNames;
+
+    public static function setUpBeforeClass(): void
+    {
+        $mbChars = '';
+        foreach (array_keys(self::getMultibyteToAsciiMap()) as $mbChar) {
+            $mbChars .= $mbChar;
+        }
+        $letter = "A-Za-z{$mbChars}";
+        self::$rxValidNames = "_^[{$letter}][{$letter} \-\/'.]*[$letter]'?\$_";
+    }
 
     /**
      * @dataProvider provideGeographicalSubdivisions
@@ -23,7 +36,7 @@ class PropertiesTest extends TerritoryTestCase
     public function testGeographicalSubdivisionProperties(GeographicalSubdivision $geographicalSubdivision): void
     {
         $this->assertGreaterThanOrEqual(1, $geographicalSubdivision->getID());
-        $this->assertMatchesRegularExpression(self::RX_VALID_NAMES, $geographicalSubdivision->getName());
+        $this->assertMatchesRegularExpression(self::$rxValidNames, $geographicalSubdivision->getName());
         $this->assertSame($geographicalSubdivision->getName(), (string) $geographicalSubdivision);
         $this->assertMatchesRegularExpression('/^IT[A-Z]$/', $geographicalSubdivision->getNuts1());
     }
@@ -35,7 +48,7 @@ class PropertiesTest extends TerritoryTestCase
     {
         $this->assertMatchesRegularExpression('/^[0-9]{2}$/', $region->getID());
         $this->assertNotSame('00', $region->getID());
-        $this->assertMatchesRegularExpression(self::RX_VALID_NAMES, $region->getName());
+        $this->assertMatchesRegularExpression(self::$rxValidNames, $region->getName());
         $this->assertSame($region->getName(), (string) $region);
         $this->assertContains($region->getType(), [
             Region\Type::ORDINARY_STATUS,
@@ -60,7 +73,7 @@ class PropertiesTest extends TerritoryTestCase
     {
         $this->assertMatchesRegularExpression('/^[0-9]{3}$/', $province->getID());
         $this->assertNotSame('000', $province->getID());
-        $this->assertMatchesRegularExpression(self::RX_VALID_NAMES, $province->getName());
+        $this->assertMatchesRegularExpression(self::$rxValidNames, $province->getName());
         $this->assertSame($province->getName(), (string) $province);
         $this->assertMatchesRegularExpression('/^[0-9]{3}$/', $province->getOldID());
         $this->assertNotSame('000', $province->getOldID());
@@ -85,7 +98,7 @@ class PropertiesTest extends TerritoryTestCase
         $this->assertMatchesRegularExpression('/^[0-9]{6}$/', $municipality->getID());
         $this->assertNotSame('000000', $municipality->getID());
         $this->assertStringStartsWith($municipality->getParent()->getOldID(), $municipality->getID());
-        $this->assertMatchesRegularExpression(self::RX_VALID_NAMES, $municipality->getName());
+        $this->assertMatchesRegularExpression(self::$rxValidNames, $municipality->getName());
         $this->assertSame("{$municipality->getName()} ({$municipality->getParent()->getVehicleCode()})", (string) $municipality);
         $nameIT = $municipality->getNameIT();
         if ($nameIT === '') {

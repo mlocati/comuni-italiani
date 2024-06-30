@@ -58,18 +58,6 @@ final class Province
         }
     }
 
-    public function checkFlatEntry(FlatMunicipality $flatMunicipality): void
-    {
-        if ($this->id !== $flatMunicipality->utsID
-            || $this->oldID !== $flatMunicipality->utsOldID
-            || $this->vehicleCode !== $flatMunicipality->utsVehicleCode
-            || $this->type !== $flatMunicipality->utsType
-            || $this->name !== $flatMunicipality->utsName
-        ) {
-            throw new RuntimeException('Incompatible FlatMunicipality for ' . __CLASS__);
-        }
-    }
-
     public function serialize(Collator $collator): array
     {
         $result = [
