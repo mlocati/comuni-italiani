@@ -1,0 +1,3 @@
+/bin/ export-ignore
+/src/Build/ export-ignore
+/src/data/geographical-subdivisions.unminified.php export-ignore

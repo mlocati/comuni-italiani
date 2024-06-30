@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/schema/9.5.xsd"
+    bootstrap="test/bootstrap.php"
+    beStrictAboutOutputDuringTests="true"
+    failOnRisky="true"
+    failOnWarning="true"
+    colors="true"
+>
+    <testsuites>
+        <testsuite name="unit">
+            <directory>test/tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

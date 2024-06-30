@@ -1,0 +1,105 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://github.com/mlocati/comuni-italiani/68",
+    "title": "Schema of data fetched from situas.istat.it/ (Regioni)",
+    "type": "object",
+    "properties": {
+        "totalRows": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "colNames": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "type": "string"
+            }
+        },
+        "label": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "type": "string"
+            }
+        },
+        "formatMasks": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "type": "string"
+            }
+        },
+        "types": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "type": "string"
+            }
+        },
+        "body": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "COD_RIP": {
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "DEN_RIP": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "COD_REG": {
+                        "type": ["string", "integer"],
+                        "pattern": "^[0-9]{2}$",
+                        "minimum": 1,
+                        "maximum": 99
+                    },
+                    "DEN_REG": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "TIPO_REG": {
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "DESC_TIPO_REG": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "COD_REG_FISCALE": {
+                        "type": ["string", "integer"],
+                        "pattern": "^[0-9]{11}$",
+                        "minimum": 1,
+                        "maximim": 99999999999
+                    },
+                    "COD_NUTS2_2024": {
+                        "type": ["string", "null"],
+                        "pattern": "^IT[A-Z][0-9]$"
+                    }
+                },
+                "required": [
+                    "COD_RIP",
+                    "DEN_RIP",
+                    "COD_REG",
+                    "DEN_REG",
+                    "TIPO_REG",
+                    "DESC_TIPO_REG",
+                    "COD_REG_FISCALE",
+                    "COD_NUTS2_2024"
+                ],
+                "additionalProperties": false
+            }
+        }
+    },
+    "required": [
+        "totalRows",
+        "colNames",
+        "label",
+        "formatMasks",
+        "types",
+        "body"
+    ],
+    "additionalProperties": false
+}

@@ -1,0 +1,68 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use MLocati\ComuniItaliani\Build\Builder;
+use Riimu\Kit\PHPEncoder\PHPEncoder;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+
+set_error_handler(static function ($errno = 0, $errstr = '', $errfile = '', $errline = null) {
+    $msg = (string) $errstr;
+    if ($msg === '') {
+        $msg = "Unknown error (code: {$errno})";
+    }
+    if ((string) $errfile !== '') {
+        $msg .= "\nFile: {$errfile}";
+        if ($errline) {
+            $msg .= "\nLine: {$errline}";
+        }
+    }
+    throw new RuntimeException($msg);
+}, -1);
+
+if (PHP_VERSION_ID < 80200) {
+    fwrite(STDERR, "This script requires PHP 8.2+\n");
+    exit(1);
+}
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+function main(): void
+{
+    $cache = new FilesystemAdapter(
+        '',
+        14400,
+        __DIR__ . '/../cache',
+    );
+    $builder = new Builder(null, $cache);
+    $data = $builder->buildData();
+    $encoder = new PHPEncoder([
+        'hex.capitalize' => false,
+        'null.capitalize' => false,
+        'boolean.capitalize' => false,
+        'integer.type' => 'decimal',
+        'float.integers' => true,
+        'float.export' => false,
+        'string.escape' => true,
+        'string.utf8' => true,
+        'array.short' => true,
+        'array.base' => 0,
+    ]);
+    $output = __DIR__ . '/../src/data';
+    if (!is_dir($output)) {
+        mkdir($output);
+    }
+    $php = "<?php\n\nreturn " . $encoder->encode($data, ['whitespace' => true, 'array.inline' => 0]) . ";\n";
+    file_put_contents($output . '/geographical-subdivisions.unminified.php', $php);
+    $php = "<?php return " . $encoder->encode($data, ['whitespace' => false]) . ';';
+    file_put_contents($output . '/geographical-subdivisions.php', $php);
+}
+
+try {
+    mb_internal_encoding('UTF-8');
+    main();
+} catch (RuntimeException $x) {
+    fwrite(STDERR, trim($x->getMessage()) . "\n");
+    exit(1);
+}

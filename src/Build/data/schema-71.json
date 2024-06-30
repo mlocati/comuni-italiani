@@ -1,0 +1,76 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://github.com/mlocati/comuni-italiani/71",
+    "title": "Schema of data fetched from situas.istat.it/ (Ripartizioni geografiche)",
+    "type": "object",
+    "properties": {
+        "totalRows": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "colNames": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "type": "string"
+            }
+        },
+        "label": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "type": "string"
+            }
+        },
+        "formatMasks": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "type": "string"
+            }
+        },
+        "types": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "type": "string"
+            }
+        },
+        "body": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "COD_RIP": {
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "DEN_RIP": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "COD_NUTS1_2024": {
+                        "type": "string",
+                        "pattern": "^IT[A-Z]$"
+                    }
+                },
+                "required": [
+                    "COD_RIP",
+                    "DEN_RIP",
+                    "COD_NUTS1_2024"
+                ],
+                "additionalProperties": false
+            }
+        }
+    },
+    "required": [
+        "totalRows",
+        "colNames",
+        "label",
+        "formatMasks",
+        "types",
+        "body"
+    ],
+    "additionalProperties": false
+}

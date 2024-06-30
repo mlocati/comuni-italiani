@@ -1,0 +1,76 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  phpcs:
+    name: PHP Coding Style
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          tools: php-cs-fixer
+          coverage: none
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Run PHP-CS-Fixer
+        run: php-cs-fixer check --ansi --no-interaction --using-cache=no --diff --show-progress=none
+
+  phpunit:
+    name: PHPUnit
+    needs:
+        - phpcs
+    strategy:
+      matrix:
+        include:
+          -
+            os: ubuntu-latest
+            php-version: "7.4"
+          -
+            os: ubuntu-latest
+            php-version: "8.0"
+          -
+            os: ubuntu-latest
+            php-version: "8.1"
+          -
+            os: ubuntu-latest
+            php-version: "8.2"
+          -
+            os: ubuntu-latest
+            php-version: "8.3"
+          -
+            os: windows-latest
+            php-version: "7.4"
+          -
+            os: windows-latest
+            php-version: "8.3"
+    runs-on: ${{ matrix.os }}
+    steps:
+      -
+        name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          tools: composer
+          coverage: none
+          extensions: intl
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Install Composer dependencies
+        run: composer update --ansi --no-interaction --no-progress
+      -
+        name: Run PHPUnit
+        run: composer run-script test --ansi --no-interaction

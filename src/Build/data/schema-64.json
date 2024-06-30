@@ -1,0 +1,129 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://github.com/mlocati/comuni-italiani/64",
+    "title": "Schema of data fetched from situas.istat.it/ (Provinces)",
+    "type": "object",
+    "properties": {
+        "totalRows": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "colNames": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "type": "string"
+            }
+        },
+        "label": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "type": "string"
+            }
+        },
+        "formatMasks": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "type": "string"
+            }
+        },
+        "types": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "type": "string"
+            }
+        },
+        "body": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "COD_RIP": {
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "DEN_RIP": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "COD_REG": {
+                        "type": ["string", "integer"],
+                        "pattern": "^[0-9]{2}$",
+                        "minimum": 1,
+                        "maximum": 99
+                    },
+                    "DEN_REG": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "COD_UTS": {
+                        "type": ["string", "integer"],
+                        "pattern": "^[0-9]{3}$",
+                        "minimum": 1,
+                        "maximum": 999
+                    },
+                    "DEN_UTS": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "COD_PROV_STORICO": {
+                        "type": ["string", "integer"],
+                        "pattern": "^[0-9]{3}$",
+                        "minimum": 1,
+                        "maximum": 999
+                    },
+                    "TIPO_UTS": {
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "DESC_TIPO_UTS": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "SIGLA_AUTOMOBILISTICA": {
+                        "type": "string",
+                        "pattern": "^[A-Z]{2}$"
+                    },
+                    "COD_PROV_FISCALE": {
+                        "type": ["string", "integer"],
+                        "pattern": "^[0-9]{11}$",
+                        "minimum": 1,
+                        "maximim": 99999999999
+                    },
+                    "COD_NUTS3_2024": {
+                        "type": "string",
+                        "pattern": "^IT[A-Z][0-9][0-9A-Z]$"
+                    }
+                },
+                "required": [
+                    "COD_RIP",
+                    "DEN_RIP",
+                    "COD_REG",
+                    "DEN_REG",
+                    "COD_UTS",
+                    "DEN_UTS",
+                    "COD_PROV_STORICO",
+                    "TIPO_UTS",
+                    "DESC_TIPO_UTS",
+                    "SIGLA_AUTOMOBILISTICA",
+                    "COD_PROV_FISCALE",
+                    "COD_NUTS3_2024"
+                ],
+                "additionalProperties": false
+            }
+        }
+    },
+    "required": [
+        "totalRows",
+        "colNames",
+        "label",
+        "formatMasks",
+        "types",
+        "body"
+    ],
+    "additionalProperties": false
+}

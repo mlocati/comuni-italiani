@@ -1,0 +1,78 @@
+{
+    "name": "mlocati/comuni-italiani",
+    "description": "List of Italian Regioni (Regions), Province (Provinces), and Comuni (Municipalities) with data from Istat",
+    "type": "library",
+    "license": "MIT",
+    "homepage": "https://github.com/mlocati/comuni-italiani",
+    "authors": [
+        {
+            "name": "Michele Locati",
+            "homepage": "https://github.com/mlocati",
+            "email": "mlocati@gmail.com",
+            "role": "Author"
+        }
+    ],
+    "keywords": [
+        "italia",
+        "italiani",
+        "italiane",
+        "italy",
+        "italian",
+        "regione",
+        "regioni",
+        "region",
+        "regions",
+        "provincia",
+        "province",
+        "provinces",
+        "county",
+        "counties",
+        "città",
+        "comune",
+        "comuni",
+        "municipality",
+        "municipalities",
+        "istat",
+        "nuts",
+        "situas"
+    ],
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "ext-intl": "*",
+        "opis/json-schema": "^2.3",
+        "phpunit/phpunit": "^9.5",
+        "riimu/kit-phpencoder": "^2.4",
+        "symfony/cache": "^5.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "MLocati\\ComuniItaliani\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MLocati\\ComuniItaliani\\": "src/",
+            "MLocati\\ComuniItaliani\\Test\\": "test/tests/",
+            "MLocati\\ComuniItaliani\\Test\\Service\\": "test/service/"
+        }
+    },
+    "config": {
+        "optimize-autoloader" : true,
+        "sort-packages" : true
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/mlocati"
+        },
+        {
+            "type": "other",
+            "url": "https://paypal.me/mlocati"
+        }
+    ]
+}
