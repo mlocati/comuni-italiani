@@ -5,14 +5,9 @@ declare(strict_types=1);
 namespace MLocati\ComuniItaliani\Test;
 
 use MLocati\ComuniItaliani\Test\Service\TerritoryTestCase;
-use PHPUnit\Framework\TestCase;
 use MLocati\ComuniItaliani\Factory;
-use MLocati\ComuniItaliani\Municipality;
-use MLocati\ComuniItaliani\TerritoryWithChildren;
-use MLocati\ComuniItaliani\Region;
-use MLocati\ComuniItaliani\Province;
-use MLocati\ComuniItaliani\GeographicalSubdivision;
 use MLocati\ComuniItaliani\Service\SorterTrait;
+use MLocati\ComuniItaliani\Province;
 
 class SortTest extends TerritoryTestCase
 {
@@ -34,6 +29,14 @@ class SortTest extends TerritoryTestCase
     {
         $factory = new Factory();
         $this->testSort($factory->getMunicipalities());
+    }
+
+    /**
+     * @dataProvider provideProvinces
+     */
+    public function testMunicipalitiesAlreadySorted(Province $province): void
+    {
+        $this->testSort($province->getMunicipalities());
     }
 
     /**
