@@ -87,7 +87,6 @@ You can have a list of all the Geographical Subdivisions, Regions, Provinces/UTS
 For example:
 
 ```php
-
 use MLocati\ComuniItaliani\Factory;
 
 $factory = new Factory();
@@ -101,7 +100,6 @@ $allMunicipalities = $factory->getMunicipalities();
 If you want to retrieve a territory given its ID, you can use the `Finder` class:
 
 ```php
-
 use MLocati\ComuniItaliani\Finder;
 
 $finder = new Finder();
@@ -110,4 +108,41 @@ $geographicalSubdivision = $finder->getGeographicalSubdivisionByID(1);
 $region = $finder->getRegionByID('01');
 $province = $finder->getProvinceByID('201');
 $municipality = $finder->getMunicipalityByID('001272');
+```
+
+### Finding territories by name
+
+You can use the `Finder` class to find Geographical Subdivisions, Regions, Provinces/UTS, and Municipalities by name.
+
+The text to be searched will be split into words, and you'll get the territories whose names contain all the words.
+
+For example, searching for `roma lombard` will return the `Romano di Lombardia (BG)` municipality.
+
+Examples:
+
+```php
+use MLocati\ComuniItaliani\Finder;
+
+$finder = new Finder();
+
+$geographicalSubdivisions = $finder->findGeographicalSubdivisionsByName('Nord');
+$regions = $finder->findRegionsByName('Campa');
+$provinces = $finder->findProvincesByName('Bozen');
+$municipalities = $finder->findMunicipalitiesByName('Roma lombard');
+```
+
+By default, Finder will look for the beginning of words.
+So, `ampania` won't match `Campania`.
+
+If you want to allow searching in the middle of the words, specify `true` as the second parameter:
+
+```php
+use MLocati\ComuniItaliani\Finder;
+
+$finder = new Finder();
+
+$geographicalSubdivisions = $finder->findGeographicalSubdivisionsByName('ord', true);
+$regions = $finder->findRegionsByName('ampania', true);
+$provinces = $finder->findProvincesByName('ozen', true);
+$municipalities = $finder->findMunicipalitiesByName('oma ombard', true);
 ```

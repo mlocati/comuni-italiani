@@ -9,11 +9,11 @@ use MLocati\ComuniItaliani\Municipality;
 use MLocati\ComuniItaliani\Region;
 use MLocati\ComuniItaliani\Province;
 use MLocati\ComuniItaliani\GeographicalSubdivision;
-use MLocati\ComuniItaliani\Service\SorterTrait;
+use MLocati\ComuniItaliani\Service\MultibyteTrait;
 
 class PropertiesTest extends TerritoryTestCase
 {
-    use SorterTrait;
+    use MultibyteTrait;
 
     private static string $rxValidNames;
 
