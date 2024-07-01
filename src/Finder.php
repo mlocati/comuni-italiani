@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace MLocati\ComuniItaliani;
 
+use Generator;
+
 class Finder
 {
+    use Service\SorterTrait;
+
     protected Factory $factory;
 
     public function __construct(?Factory $factory = null)
@@ -43,7 +47,7 @@ class Finder
      */
     public function getGeographicalSubdivisionByID(int $id): ?GeographicalSubdivision
     {
-        foreach ($this->factory->getGeographicalSubdivisions() as $geographicalSubdivision) {
+        foreach ($this->listGeographicalSubdivisions() as $geographicalSubdivision) {
             if ($geographicalSubdivision->getID() === $id) {
                 return $geographicalSubdivision;
             }
@@ -60,11 +64,9 @@ class Finder
         if (!preg_match('/^[0-9]{2}$/', $id)) {
             return null;
         }
-        foreach ($this->factory->getGeographicalSubdivisions() as $geographicalSubdivisions) {
-            foreach ($geographicalSubdivisions->getRegions() as $region) {
-                if ($region->getID() === $id) {
-                    return $region;
-                }
+        foreach ($this->listRegions() as $region) {
+            if ($region->getID() === $id) {
+                return $region;
             }
         }
 
@@ -81,18 +83,12 @@ class Finder
         if (!preg_match('/^[0-9]{3}$/', $id)) {
             return null;
         }
-        foreach ($this->factory->getGeographicalSubdivisions() as $geographicalSubdivisions) {
-            foreach ($geographicalSubdivisions->getRegions() as $region) {
-                foreach ($region->getProvinces() as $province) {
-                    foreach ($province->getMunicipalities() as $municipality) {
-                        if ($province->getID() === $id) {
-                            return $province;
-                        }
-                        if ($oldIDToo && $province->getOldID() === $id) {
-                            return $province;
-                        }
-                    }
-                }
+        foreach ($this->listProvinces() as $province) {
+            if ($province->getID() === $id) {
+                return $province;
+            }
+            if ($oldIDToo && $province->getOldID() === $id) {
+                return $province;
             }
         }
 
@@ -110,14 +106,153 @@ class Finder
         if (!preg_match('/^[0-9]{6}$/', $id)) {
             return null;
         }
+        foreach ($this->listMunicipalities() as $municipality) {
+            if ($municipality->getID() === $id) {
+                return $municipality;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return \MLocati\ComuniItaliani\GeographicalSubdivision[]
+     */
+    public function findGeographicalSubdivisionsByName(string $name, bool $allowMiddle = false): array
+    {
+        return $this->findByName($name, $this->listGeographicalSubdivisions(), $allowMiddle, false);
+    }
+
+    /**
+     * @return \MLocati\ComuniItaliani\Region[]
+     */
+    public function findRegionsByName(string $name, bool $allowMiddle = false): array
+    {
+        return $this->findByName($name, $this->listRegions(), $allowMiddle, true);
+    }
+
+    /**
+     * @return \MLocati\ComuniItaliani\Province[]
+     */
+    public function findProvincesByName(string $name, bool $allowMiddle = false): array
+    {
+        return $this->findByName($name, $this->listProvinces(), $allowMiddle, true);
+    }
+
+    /**
+     * @return \MLocati\ComuniItaliani\Municipality[]
+     */
+    public function findMunicipalitiesByName(string $name, bool $allowMiddle = false): array
+    {
+        return $this->findByName($name, $this->listMunicipalities(), $allowMiddle, true);
+    }
+
+    /**
+     * @param \Generator<\MLocati\ComuniItaliani\Territory> $lister
+     *
+     * @return \MLocati\ComuniItaliani\Territory[]
+     */
+    protected function findByName(string $name, Generator $lister, bool $allowMiddle, bool $sort): array
+    {
+        if (($wantedWords = $this->extractWords($name)) === []) {
+            return [];
+        }
+        $result = [];
+        foreach ($lister as $territory) {
+            $territoryWords = $this->extractWords((string) $territory);
+            if ($this->matchesWords($wantedWords, $territoryWords, $allowMiddle)) {
+                $result[] = $territory;
+            }
+        }
+
+        return $sort ? $this->sortTerritoriesByName($result) : $result;
+    }
+
+    /**
+     * @return \Generator<\MLocati\ComuniItaliani\GeographicalSubdivision>
+     */
+    protected function listGeographicalSubdivisions(): Generator
+    {
         foreach ($this->factory->getGeographicalSubdivisions() as $geographicalSubdivisions) {
-            foreach ($geographicalSubdivisions->getRegions() as $region) {
-                foreach ($region->getProvinces() as $province) {
-                    foreach ($province->getMunicipalities() as $municipality) {
-                        if ($municipality->getID() === $id) {
-                            return $municipality;
-                        }
-                    }
+            yield $geographicalSubdivisions;
+        }
+    }
+
+    /**
+     * @return \Generator<\MLocati\ComuniItaliani\Region>
+     */
+    protected function listRegions(): Generator
+    {
+        foreach ($this->listGeographicalSubdivisions() as $geographicalSubdivision) {
+            foreach ($geographicalSubdivision->getRegions() as $region) {
+                yield $region;
+            }
+        }
+    }
+
+    /**
+     * @return \Generator<\MLocati\ComuniItaliani\Province>
+     */
+    protected function listProvinces(): Generator
+    {
+        foreach ($this->listRegions() as $region) {
+            foreach ($region->getProvinces() as $province) {
+                yield $province;
+            }
+        }
+    }
+
+    /**
+     * @return \Generator<\MLocati\ComuniItaliani\Municipality>
+     */
+    protected function listMunicipalities(): Generator
+    {
+        foreach ($this->listProvinces() as $province) {
+            foreach ($province->getMunicipalities() as $municipality) {
+                yield $municipality;
+            }
+        }
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function extractWords(string $name): array
+    {
+        $name = strtr($name, self::getMultibyteToAsciiMap());
+        $name = strtolower($name);
+        $words = preg_split('/[^a-z]+/', $name, -1, PREG_SPLIT_NO_EMPTY);
+
+        return $words;
+    }
+
+    /**
+     * @param string[] $wantedWords
+     * @param string[] $territoryWords
+     */
+    protected function matchesWords(array $wantedWords, array $territoryWords, bool $allowMiddle): bool
+    {
+        $index = -1;
+        foreach ($wantedWords as $wantedWord) {
+            $index = $this->matchesWord($wantedWord, $territoryWords, $allowMiddle, $index);
+            if ($index === null) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param string[] $territoryWords
+     */
+    protected function matchesWord(string $wantedWord, array $territoryWords, bool $allowMiddle, int $afterIndex): ?int
+    {
+        foreach ($territoryWords as $index => $territoryWord) {
+            if ($index > $afterIndex) {
+                $found = strpos($territoryWord, $wantedWord);
+                if ($found === 0 || ($allowMiddle && $found !== false)) {
+                    return $index;
                 }
             }
         }

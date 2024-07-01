@@ -9,6 +9,8 @@ use MLocati\ComuniItaliani\Territory;
 
 trait SorterTrait
 {
+    use MultibyteTrait;
+
     /**
      * @param \MLocati\ComuniItaliani\Territory[] $territories
      *
@@ -52,26 +54,5 @@ trait SorterTrait
         });
 
         return $territories;
-    }
-
-    protected static function getMultibyteToAsciiMap(): array
-    {
-        return [
-            "\u{e0}" => 'a',
-            "\u{e2}" => 'a',
-            "\u{e7}" => 'c',
-            "\u{10d}" => 'c',
-            "\u{e8}" => 'e',
-            "\u{e9}" => 'e',
-            "\u{ea}" => 'e',
-            "\u{ec}" => 'i',
-            "\u{f2}" => 'o',
-            "\u{f6}" => 'o',
-            "\u{f4}" => 'o',
-            "\u{f9}" => 'u',
-            "\u{fc}" => 'u',
-            "\u{df}" => 'ss',
-            "\u{17e}" => 'z',
-        ];
     }
 }
