@@ -11,6 +11,8 @@ return $config
     ->setRules([
         '@PER-CS' => true,
         '@PER-CS:risky' => true,
+        // Unused `use` statements must be removed.
+        'no_unused_imports' => true,
         // Multi-line arrays, arguments list, parameters list and `match` expressions must have a trailing comma.
         'trailing_comma_in_multiline' => ['elements' => ['arrays']],
     ])

@@ -12,6 +12,9 @@
             "role": "Author"
         }
     ],
+    "support": {
+        "issues": "https://github.com/mlocati/comuni-italiani/issues"
+    },
     "keywords": [
         "italia",
         "italiani",

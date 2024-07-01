@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace MLocati\ComuniItaliani\Test;
 
 use MLocati\ComuniItaliani\Test\Service\TerritoryTestCase;
-use PHPUnit\Framework\TestCase;
-use MLocati\ComuniItaliani\Factory;
 use MLocati\ComuniItaliani\Municipality;
 use MLocati\ComuniItaliani\TerritoryWithChildren;
 use MLocati\ComuniItaliani\Region;
