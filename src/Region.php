@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace MLocati\ComuniItaliani;
 
+/**
+ * Represents a Region (regione)
+ */
 final class Region implements TerritoryWithChildren
 {
     private array $data;
@@ -22,19 +25,23 @@ final class Region implements TerritoryWithChildren
      * {@inheritdoc}
      *
      * @see \MLocati\ComuniItaliani\Territory::getParent()
+     * @see \MLocati\ComuniItaliani\Region::getGeographicalSubdivision()
      */
-    public function getParent(): Territory
+    public function getParent(): GeographicalSubdivision
     {
         return $this->getGeographicalSubdivision();
     }
 
+    /**
+     * Get the Geographical Subdivision this Region belongs to.
+     */
     public function getGeographicalSubdivision(): GeographicalSubdivision
     {
         return $this->geographicalSubdivision;
     }
 
     /**
-     * {@inheritdoc}
+     * Get the Region Istat ID ("codice Istat della regione").
      *
      * @see \MLocati\ComuniItaliani\Territory::getID()
      */
@@ -44,7 +51,7 @@ final class Region implements TerritoryWithChildren
     }
 
     /**
-     * {@inheritdoc}
+     * Get the Region name.
      *
      * @see \MLocati\ComuniItaliani\Territory::getName()
      */
@@ -54,6 +61,8 @@ final class Region implements TerritoryWithChildren
     }
 
     /**
+     * Get the Region type.
+     *
      * @see \MLocati\ComuniItaliani\Region\Type
      */
     public function getType(): int
@@ -61,11 +70,17 @@ final class Region implements TerritoryWithChildren
         return $this->data['type'];
     }
 
+    /**
+     * Get the Fiscal Code ("codice fiscale") assigned by the Agenzia delle Entrate in order to uniquely identify a legal entity.
+     */
     public function getFiscalCode(): string
     {
         return $this->data['fiscalCode'];
     }
 
+    /**
+     * Get the second level of the current Nomenclature of Territorial Units for Statistics (NUTS2).
+     */
     public function getNuts2(): string
     {
         return $this->data['nuts2'] ?? '';
@@ -85,6 +100,7 @@ final class Region implements TerritoryWithChildren
      * {@inheritdoc}
      *
      * @see \MLocati\ComuniItaliani\TerritoryWithChildren::getChildren()
+     * @see \MLocati\ComuniItaliani\Region::getProvinces()
      */
     public function getChildren(): array
     {
@@ -92,6 +108,8 @@ final class Region implements TerritoryWithChildren
     }
 
     /**
+     * Get all the Provinces/UTS belonging to this Region, sorted by name
+     *
      * @return \MLocati\ComuniItaliani\Province[]
      */
     public function getProvinces(): array
@@ -99,6 +117,9 @@ final class Region implements TerritoryWithChildren
         return $this->provinces ??= $this->buildProvinces();
     }
 
+    /**
+     * Get the Capital Municipality of this Region ("capoluogo di regione").
+     */
     public function getCapital(): Municipality
     {
         foreach ($this->getProvinces() as $province) {

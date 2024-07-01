@@ -14,6 +14,8 @@ class Factory
     private ?array $geographicalSubdivisions = null;
 
     /**
+     * Get all the Geographical Subdivisions, sorted by geographical location).
+     *
      * @return \MLocati\ComuniItaliani\GeographicalSubdivision[]
      */
     public function getGeographicalSubdivisions(): array
@@ -22,6 +24,8 @@ class Factory
     }
 
     /**
+     * Get all the Regions, sorted by name.
+     *
      * @return \MLocati\ComuniItaliani\Region[]
      */
     public function getRegions(): array
@@ -35,6 +39,8 @@ class Factory
     }
 
     /**
+     * Get all the Provinces, sorted by name.
+     *
      * @return \MLocati\ComuniItaliani\Province[]
      */
     public function getProvinces(): array
@@ -48,6 +54,8 @@ class Factory
     }
 
     /**
+     * Get all the Municipalities, sorted by name.
+     *
      * @return \MLocati\ComuniItaliani\Municipality[]
      */
     public function getMunicipalities(): array
