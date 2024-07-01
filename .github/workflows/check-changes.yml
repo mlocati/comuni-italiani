@@ -1,0 +1,62 @@
+name: Check Changes
+
+on:
+  schedule:
+    - cron: "0 8 * * 1"
+  workflow_dispatch:
+
+jobs:
+  check-changes:
+    name: Check Changes
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          tools: composer
+          coverage: none
+          extensions: intl
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Install Composer dependencies
+        run: composer update --ansi --no-interaction --no-progress
+      -
+        name: Build Data
+        run: ./bin/build
+      -
+        name: Check Data Changes
+        id: check
+        run: |
+          CHANGES="$(git status --porcelain)"
+          if [ -z "$CHANGES" ]; then
+            echo 'No changes detected'
+          else
+            printf 'CHANGES DETECTED:\n\n%s' "$CHANGES"
+            echo "DATA_CHANGED=1" >> "$GITHUB_OUTPUT"
+          fi
+      -
+        name: Create Pull Request
+        id: create-pr
+        if: steps.check.outputs.DATA_CHANGED
+        uses: peter-evans/create-pull-request@v5
+        with:
+          title: Update Istat data
+          commit-message: Update Istat data
+          branch: new-istat-data
+          body: Created by ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      -
+        name: Pull Request Info
+        if: steps.check.outputs.DATA_CHANGED
+        run: printf 'Pull request created:\n%s' "${{ steps.create-pr.outputs.pull-request-url }}"
+      -
+        name: Notify Failures
+        if: failure()
+        uses: appleboy/telegram-action@master
+        with:
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          to: '-4285658144'
+          message: Checking last Istat data failed on https://github.com/mlocati/comuni-italiani/actions/runs/${{ github.run_id }}
