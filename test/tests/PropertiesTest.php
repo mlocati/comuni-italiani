@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace MLocati\ComuniItaliani\Test;
 
 use MLocati\ComuniItaliani\Test\Service\TerritoryTestCase;
-use PHPUnit\Framework\TestCase;
-use MLocati\ComuniItaliani\Factory;
 use MLocati\ComuniItaliani\Municipality;
-use MLocati\ComuniItaliani\TerritoryWithChildren;
 use MLocati\ComuniItaliani\Region;
 use MLocati\ComuniItaliani\Province;
 use MLocati\ComuniItaliani\GeographicalSubdivision;
@@ -54,8 +51,7 @@ class PropertiesTest extends TerritoryTestCase
             Region\Type::ORDINARY_STATUS,
             Region\Type::SPECIAL_STATUS,
         ]);
-        $this->assertMatchesRegularExpression('/^[0-9]{11}$/', $region->getFiscalCode());
-        $this->assertNotSame('00000000000', $region->getFiscalCode());
+        self::testFiscalCode($region->getFiscalCode(), false);
         switch ($region->getID()) {
             case '04': // Trentino-Alto Adige/Südtirol
                 $this->assertSame('', $region->getNuts2());
@@ -85,8 +81,7 @@ class PropertiesTest extends TerritoryTestCase
             Province\Type::NON_ADMINISTRATIVE_UNIT,
         ]);
         $this->assertMatchesRegularExpression('/^[A-Z]{2}$/', $province->getVehicleCode());
-        $this->assertMatchesRegularExpression('/^([0-9]{11})?$/', $province->getFiscalCode());
-        $this->assertNotSame('00000000000', $province->getFiscalCode());
+        self::testFiscalCode($province->getFiscalCode(), false);
         $this->assertMatchesRegularExpression('/^IT[A-Z][0-9][0-9A-Z]$/', $province->getNuts3());
     }
 
@@ -111,10 +106,44 @@ class PropertiesTest extends TerritoryTestCase
         $this->assertIsBool($municipality->isRegionalCapital());
         $this->assertIsBool($municipality->isProvinceCapital());
         $this->assertMatchesRegularExpression('/^[A-Z][0-9]{3}$/', $municipality->getCadastralCode());
-        $this->assertMatchesRegularExpression('/^([0-9]{11})?$/', $municipality->getFiscalCode());
-        $this->assertNotSame('00000000000', $municipality->getFiscalCode());
+        switch ($municipality->getID()) {
+            case '028108': // Santa Caterina d'Este (PD)
+            case '025075': // Setteville (BL)
+            case '024128': // Sovizzo (VI)
+            case '013256': // Uggiate con Ronago (CO)
+                $optional = true;
+                break;
+            default:
+                $optional = false;
+        }
+        self::testFiscalCode($municipality->getFiscalCode(), $optional, "{$municipality->getID()} {$municipality}");
         $this->assertMatchesRegularExpression('/^IT[A-Z]$/', $municipality->getNuts1());
         $this->assertMatchesRegularExpression('/^IT[A-Z][0-9]$/', $municipality->getNuts2());
         $this->assertMatchesRegularExpression('/^IT[A-Z][0-9][0-9A-Z]$/', $municipality->getNuts3());
+    }
+
+    private static function testFiscalCode(string $fiscalCode, bool $optional, string $message = ''): void
+    {
+        if ($optional && $fiscalCode === '') {
+            return;
+        }
+        static::assertMatchesRegularExpression('/^[0-9]{11}?$/', $fiscalCode, $message);
+        static::assertNotSame('00000000000', $fiscalCode, $message);
+        $sum = 0;
+        for ($index = 0; $index <= 8; $index += 2) {
+            $sum += (int) $fiscalCode[$index];
+        }
+        for ($index = 1; $index <= 9; $index += 2) {
+            $s = ((int) $fiscalCode[$index]) << 1;
+            if ($s > 9) {
+                $s -= 9;
+            }
+            $sum += $s;
+        }
+        $check = $sum % 10;
+        if ($check !== 0) {
+            $check = 10 - $check;
+        }
+        static::assertSame($check, (int) $fiscalCode[10], $message);
     }
 }
