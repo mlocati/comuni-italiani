@@ -4,9 +4,16 @@ declare(strict_types=1);
 
 namespace MLocati\ComuniItaliani;
 
-final class GeographicalSubdivision extends TerritoryWithChildren
+final class GeographicalSubdivision implements TerritoryWithChildren
 {
+    private array $data;
+
     private ?array $regions = null;
+
+    public function __construct(array $data)
+    {
+        $this->data = $data;
+    }
 
     /**
      * {@inheritdoc}

@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace MLocati\ComuniItaliani;
 
-final class Province extends TerritoryWithChildren
+final class Province implements TerritoryWithChildren
 {
+    private array $data;
+
     private Region $region;
 
     private ?array $municipalities = null;
 
     public function __construct(array $data, Region $region)
     {
-        parent::__construct($data);
+        $this->data = $data;
         $this->region = $region;
     }
 

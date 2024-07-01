@@ -4,23 +4,16 @@ declare(strict_types=1);
 
 namespace MLocati\ComuniItaliani;
 
-abstract class Territory
+interface Territory
 {
-    protected array $data;
-
-    public function __construct(array $data)
-    {
-        $this->data = $data;
-    }
-
     /**
      * @return string|int
      */
-    abstract public function getID();
+    public function getID();
 
-    abstract public function getParent(): ?Territory;
+    public function getParent(): ?Territory;
 
-    abstract public function getName(): string;
+    public function getName(): string;
 
-    abstract public function __toString(): string;
+    public function __toString(): string;
 }
