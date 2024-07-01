@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace MLocati\ComuniItaliani\Test;
 
 use MLocati\ComuniItaliani\Test\Service\TerritoryTestCase;
+use MLocati\ComuniItaliani\Factory;
+use MLocati\ComuniItaliani\Finder;
 use MLocati\ComuniItaliani\Municipality;
 use MLocati\ComuniItaliani\TerritoryWithChildren;
 use MLocati\ComuniItaliani\Region;
@@ -78,5 +80,26 @@ class SingletonsTest extends TerritoryTestCase
     {
         $this->assertInstanceOf(Province::class, $municipality->getParent());
         $this->assertNotInstanceOf(TerritoryWithChildren::class, $municipality);
+    }
+
+    public function testFinder(): void
+    {
+        $factory = new Factory();
+        foreach ([false, true] as $same) {
+            if ($same) {
+                $finder = new Finder($factory);
+            } else {
+                $finder = new Finder();
+            }
+            foreach ($factory->getGeographicalSubdivisions() as $geographicalSubdivision) {
+                $found = $finder->getGeographicalSubdivisionByID($geographicalSubdivision->getID());
+                if ($same) {
+                    $this->assertSame($geographicalSubdivision, $found);
+                } else {
+                    $this->assertNotSame($geographicalSubdivision, $found);
+                    $this->assertEquals($geographicalSubdivision, $found);
+                }
+            }
+        }
     }
 }
