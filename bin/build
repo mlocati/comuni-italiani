@@ -36,7 +36,10 @@ function main(): void
         __DIR__ . '/../cache',
     );
     $builder = new Builder(null, $cache);
+    echo 'Please wait, collecting data... ';
     $data = $builder->buildData();
+    echo "done.\n";
+    echo 'Saving data... ';
     $encoder = new PHPEncoder([
         'hex.capitalize' => false,
         'null.capitalize' => false,
@@ -48,6 +51,8 @@ function main(): void
         'string.utf8' => true,
         'array.short' => true,
         'array.base' => 0,
+        'array.eol' => "\n",
+        'recursion.detect' => false,
     ]);
     $output = __DIR__ . '/../src/data';
     if (!is_dir($output)) {
@@ -57,6 +62,7 @@ function main(): void
     file_put_contents($output . '/geographical-subdivisions.unminified.php', $php);
     $php = "<?php return " . $encoder->encode($data, ['whitespace' => false]) . ';';
     file_put_contents($output . '/geographical-subdivisions.php', $php);
+    echo "done.\n";
 }
 
 try {
