@@ -83,7 +83,7 @@ final class Province implements TerritoryWithChildren
     }
 
     /**
-     * Get the vehicle code ("Sigla automobilistica").
+     * Get the vehicle code ("sigla automobilistica").
      */
     public function getVehicleCode(): string
     {
