@@ -80,7 +80,7 @@ This library provides the following data:
   - the second level of the current Nomenclature of Territorial Units for Statistics (NUTS2) (example: `'ITC1'`)
   - the third level of the current Nomenclature of Territorial Units for Statistics (NUTS3) (example: `'ITC11'`)
 
-### Retrieving Territories
+### Retrieving All Territories
 
 You can have a list of all the Geographical Subdivisions, Regions, Provinces/UTS, and Municipalities using the `Factory` class.
 
@@ -97,6 +97,8 @@ $allProvinces = $factory->getProvinces();
 $allMunicipalities = $factory->getMunicipalities();
 ```
 
+### Finding Territories by ID
+
 If you want to retrieve a territory given its ID, you can use the `Finder` class:
 
 ```php
@@ -108,6 +110,19 @@ $geographicalSubdivision = $finder->getGeographicalSubdivisionByID(1);
 $region = $finder->getRegionByID('01');
 $province = $finder->getProvinceByID('201');
 $municipality = $finder->getMunicipalityByID('001272');
+```
+
+### Finding Provinces by Vehicle Code
+
+You can use the `getProvinceByVehicleCode` method of the `Finder` class:
+
+```php
+use MLocati\ComuniItaliani\Finder;
+
+$finder = new Finder();
+
+echo $finder->getProvinceByVehicleCode('CO')->getName();
+// prints Como
 ```
 
 ### Finding Territories by Name

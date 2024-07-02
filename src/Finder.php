@@ -95,6 +95,20 @@ class Finder
         return null;
     }
 
+    public function getProvinceByVehicleCode(string $vehicleCode): ?Province
+    {
+        if (!preg_match('/^[A-Za-z]{2}$/', $vehicleCode)) {
+            return null;
+        }
+        $vehicleCode = strtoupper($vehicleCode);
+        foreach ($this->listProvinces() as $province) {
+            if ($province->getVehicleCode() === $vehicleCode) {
+                return $province;
+            }
+        }
+
+        return null;
+    }
 
     /**
      * Find a Municipality given its ID
