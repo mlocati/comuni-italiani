@@ -7,6 +7,9 @@ namespace MLocati\ComuniItaliani\Service;
 use Collator;
 use MLocati\ComuniItaliani\Territory;
 
+/**
+ * @internal
+ */
 trait SorterTrait
 {
     use MultibyteTrait;

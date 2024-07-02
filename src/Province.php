@@ -9,6 +9,8 @@ namespace MLocati\ComuniItaliani;
  */
 final class Province implements TerritoryWithChildren
 {
+    use Service\TerritoryWithChildrenTrait;
+
     private array $data;
 
     private Region $region;

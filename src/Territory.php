@@ -27,6 +27,21 @@ interface Territory
     public function getName(): string;
 
     /**
+     * Check if a territory instance is the same as this.
+     */
+    public function isSame(Territory $territory): bool;
+
+    /**
+     * Check if this territory is a child/grandchild/great-grandchild/... of another territory.
+     */
+    public function isContainedIn(Territory $territory): bool;
+
+    /**
+     * Check if this territory is a child/grandchild/great-grandchild/... of another territory, of if they are the same
+     */
+    public function isSameOrContainedIn(Territory $territory): bool;
+
+    /**
      * Get a string representation that uniquely represents the territory.
      */
     public function __toString(): string;

@@ -19,7 +19,7 @@ composer require mlocati/comuni-italiani
 
 This library provides the following Italian Administrative divisions:
 
-- **Geographical Subdivisions** (*ripartizioni geografiche*)  
+- **Geographical Subdivisions** (*ripartizioni geografiche*)
   For example "Nord-ovest", "Centro", "Sud"
 - **Regions** (*regioni*)
   For example "Piemonte", "Lazio", "Campania"
@@ -80,7 +80,7 @@ This library provides the following data:
   - the second level of the current Nomenclature of Territorial Units for Statistics (NUTS2) (example: `'ITC1'`)
   - the third level of the current Nomenclature of Territorial Units for Statistics (NUTS3) (example: `'ITC11'`)
 
-### Retrieving territories
+### Retrieving Territories
 
 You can have a list of all the Geographical Subdivisions, Regions, Provinces/UTS, and Municipalities using the `Factory` class.
 
@@ -110,7 +110,7 @@ $province = $finder->getProvinceByID('201');
 $municipality = $finder->getMunicipalityByID('001272');
 ```
 
-### Finding territories by name
+### Finding Territories by Name
 
 You can use the `Finder` class to find Geographical Subdivisions, Regions, Provinces/UTS, and Municipalities by name.
 
@@ -145,4 +145,38 @@ $geographicalSubdivisions = $finder->findGeographicalSubdivisionsByName('ord', t
 $regions = $finder->findRegionsByName('ampania', true);
 $provinces = $finder->findProvincesByName('ozen', true);
 $municipalities = $finder->findMunicipalitiesByName('oma ombard', true);
+```
+
+### Testing Hierarchy
+
+Given two territories, you can check if they are the same by using the `isSame()` method:
+
+```php
+if ($territory1->isSame($territory2)) {
+    echo 'Same territory';
+}
+```
+
+You can also check if a territory is contained in another territory:
+
+```php
+if ($territory1->isContainedIn($territory2)) {
+    echo "{$territory1} is contained in {$territory2}";
+}
+if ($territory1->isSameOrContainedIn($territory2)) {
+    echo "{$territory1} is contained in {$territory2} (or they are the same)";
+}
+```
+
+For Geographical Subdivisions, Regions, and Provinces/UTS (which are containers of other territories) you can also use the `contains()` and `isSameOrContains()` methods.
+
+```php
+// $region is an instance of Region here
+if ($region->contains($territory)) {
+    echo "{$region} contains {$terrtory}";
+}
+
+if ($region->isSameOrContains($territory)) {
+    echo "{$region} is same (or contains) {$terrtory}";
+}
 ```
