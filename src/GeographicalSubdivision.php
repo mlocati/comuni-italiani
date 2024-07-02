@@ -9,6 +9,8 @@ namespace MLocati\ComuniItaliani;
  */
 final class GeographicalSubdivision implements TerritoryWithChildren
 {
+    use Service\TerritoryWithChildrenTrait;
+
     private array $data;
 
     private ?array $regions = null;

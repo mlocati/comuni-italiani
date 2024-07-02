@@ -15,4 +15,14 @@ interface TerritoryWithChildren extends Territory
      * @return \MLocati\ComuniItaliani\Territory[]
      */
     public function getChildren(): array;
+
+    /**
+     * Check if this territory contains another territory.
+     */
+    public function contains(Territory $territory): bool;
+
+    /**
+     * Check if this territory contains another territory, or if it's the same as this.
+     */
+    public function isSameOrContains(Territory $territory): bool;
 }

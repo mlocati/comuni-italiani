@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace MLocati\ComuniItaliani\Service;
 
+/**
+ * @internal
+ */
 trait MultibyteTrait
 {
     protected static function getMultibyteToAsciiMap(): array

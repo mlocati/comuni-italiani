@@ -9,6 +9,8 @@ namespace MLocati\ComuniItaliani;
  */
 final class Municipality implements Territory
 {
+    use Service\TerritoryTrait;
+
     private array $data;
 
     private Province $province;
