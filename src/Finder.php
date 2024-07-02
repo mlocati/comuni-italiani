@@ -130,6 +130,8 @@ class Finder
     }
 
     /**
+     * @param bool $allowMiddle Set to true to look for in the moddle of the words too.
+     *
      * @return \MLocati\ComuniItaliani\GeographicalSubdivision[]
      */
     public function findGeographicalSubdivisionsByName(string $name, bool $allowMiddle = false): array
@@ -138,27 +140,37 @@ class Finder
     }
 
     /**
+     * @param bool $allowMiddle Set to true to look for in the moddle of the words too.
+     * @param \MLocati\ComuniItaliani\GeographicalSubdivision|null $restrictTo only look for regions contained in a specific territory
+     *
      * @return \MLocati\ComuniItaliani\Region[]
      */
-    public function findRegionsByName(string $name, bool $allowMiddle = false): array
+    public function findRegionsByName(string $name, bool $allowMiddle = false, ?TerritoryWithChildren $restrictTo = null): array
     {
-        return $this->findByName($name, $this->listRegions(), $allowMiddle, true);
+        return $this->findByName($name, $this->listRegions($restrictTo), $allowMiddle, true);
     }
 
     /**
+     * @param bool $allowMiddle Set to true to look for in the moddle of the words too.
+     * @param \MLocati\ComuniItaliani\GeographicalSubdivision|\MLocati\ComuniItaliani\Region|null $restrictTo only look for regions contained in a specific territory
+     * Only meaning
+     *
      * @return \MLocati\ComuniItaliani\Province[]
      */
-    public function findProvincesByName(string $name, bool $allowMiddle = false): array
+    public function findProvincesByName(string $name, bool $allowMiddle = false, ?TerritoryWithChildren $restrictTo = null): array
     {
-        return $this->findByName($name, $this->listProvinces(), $allowMiddle, true);
+        return $this->findByName($name, $this->listProvinces($restrictTo), $allowMiddle, true);
     }
 
     /**
+     * @param bool $allowMiddle Set to true to look for in the moddle of the words too.
+     * @param \MLocati\ComuniItaliani\TerritoryWithChildren|null $restrictTo only look for regions contained in a specific territory
+     *
      * @return \MLocati\ComuniItaliani\Municipality[]
      */
-    public function findMunicipalitiesByName(string $name, bool $allowMiddle = false): array
+    public function findMunicipalitiesByName(string $name, bool $allowMiddle = false, ?TerritoryWithChildren $restrictTo = null): array
     {
-        return $this->findByName($name, $this->listMunicipalities(), $allowMiddle, true);
+        return $this->findByName($name, $this->listMunicipalities($restrictTo), $allowMiddle, true);
     }
 
     /**
@@ -173,7 +185,7 @@ class Finder
         }
         $result = [];
         foreach ($lister as $territory) {
-            $territoryWords = $this->extractWords((string) $territory);
+            $territoryWords = $this->extractWords($territory->getName());
             if ($this->matchesWords($wantedWords, $territoryWords, $allowMiddle)) {
                 $result[] = $territory;
             }
@@ -195,9 +207,16 @@ class Finder
     /**
      * @return \Generator<\MLocati\ComuniItaliani\Region>
      */
-    protected function listRegions(): Generator
+    protected function listRegions(?TerritoryWithChildren $restrictTo = null): Generator
     {
-        foreach ($this->listGeographicalSubdivisions() as $geographicalSubdivision) {
+        if ($restrictTo instanceof GeographicalSubdivision) {
+            $geographicalSubdivisions = [$restrictTo];
+        } elseif ($restrictTo === null) {
+            $geographicalSubdivisions = $this->listGeographicalSubdivisions();
+        } else {
+            return;
+        }
+        foreach ($geographicalSubdivisions as $geographicalSubdivision) {
             foreach ($geographicalSubdivision->getRegions() as $region) {
                 yield $region;
             }
@@ -207,9 +226,14 @@ class Finder
     /**
      * @return \Generator<\MLocati\ComuniItaliani\Province>
      */
-    protected function listProvinces(): Generator
+    protected function listProvinces(?TerritoryWithChildren $restrictTo = null): Generator
     {
-        foreach ($this->listRegions() as $region) {
+        if ($restrictTo instanceof Region) {
+            $regions = [$restrictTo];
+        } else {
+            $regions = $this->listRegions($restrictTo);
+        }
+        foreach ($regions as $region) {
             foreach ($region->getProvinces() as $province) {
                 yield $province;
             }
@@ -219,9 +243,14 @@ class Finder
     /**
      * @return \Generator<\MLocati\ComuniItaliani\Municipality>
      */
-    protected function listMunicipalities(): Generator
+    protected function listMunicipalities(?TerritoryWithChildren $restrictTo = null): Generator
     {
-        foreach ($this->listProvinces() as $province) {
+        if ($restrictTo instanceof Province) {
+            $provinces = [$restrictTo];
+        } else {
+            $provinces = $this->listProvinces($restrictTo);
+        }
+        foreach ($provinces as $province) {
             foreach ($province->getMunicipalities() as $municipality) {
                 yield $municipality;
             }
