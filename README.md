@@ -162,6 +162,18 @@ $provinces = $finder->findProvincesByName('ozen', true);
 $municipalities = $finder->findMunicipalitiesByName('oma ombard', true);
 ```
 
+You can also restrict the search to specific territories:
+
+```php
+use MLocati\ComuniItaliani\Finder;
+
+$finder = new Finder();
+
+$province = $finder->getProvinceByVehicleCode('BG');
+$municipalities = $finder->findMunicipalitiesByName('romano', false, $province);
+// The same applies to findRegionsByName and findProvincesByName
+```
+
 ### Testing Hierarchy
 
 Given two territories, you can check if they are the same by using the `isSame()` method:

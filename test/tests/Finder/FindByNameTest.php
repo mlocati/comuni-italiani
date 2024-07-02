@@ -110,15 +110,15 @@ class FindByNameTest extends TestCase
             ['', []],
             ['ozzuoli', []],
             ['ozzuoli', ['Pozzuoli (NA)'], true],
+            ['lombard roma', []],
+            ['roma lombard', ['Romano di Lombardia (BG)']],
+            ['roma d lombard', ['Romano di Lombardia (BG)']],
             ['mano i lomb', []],
             ['mano i lomb', ['Romano di Lombardia (BG)'], true],
-            ['mano i bg', []],
-            ['mano i bg', ['Romano di Lombardia (BG)'], true],
-            ['roman d bg', ['Romano di Lombardia (BG)']],
-            ['ant su', ["Sant'Antioco (SU)", "Sant'Antonino di Susa (TO)"]],
-            ['roma d lombard', ['Romano di Lombardia (BG)']],
-            ['oma i ombard', []],
-            ['oma i ombard', ['Romano di Lombardia (BG)'], true],
+            ['mano i bardi', []],
+            ['mano i bardi', ['Romano di Lombardia (BG)'], true],
+            ['roman d lom', ['Romano di Lombardia (BG)']],
+            ['ant su', ["Sant'Antonino di Susa (TO)"]],
         ];
     }
 
@@ -132,6 +132,77 @@ class FindByNameTest extends TestCase
         $territories = $this->getFinder()->findMunicipalitiesByName($search, $allowMiddle);
         $actualNames = array_map('strval', $territories);
         $this->assertSame($expectedNames, $actualNames);
+    }
+
+    public function testFindRestricted(): void
+    {
+        $finder = $this->getFinder();
+        $geographicalSubdivision1 = $finder->findGeographicalSubdivisionsByName('nord ovest')[0];
+        $this->assertSame('nord-ovest', strtolower((string) $geographicalSubdivision1));
+        $geographicalSubdivision2 = $finder->findGeographicalSubdivisionsByName('sud')[0];
+        $this->assertSame('sud', strtolower((string) $geographicalSubdivision2));
+        $region1 = $finder->findRegionsByName('piemonte')[0];
+        $this->assertSame('piemonte', strtolower((string) $region1));
+        $region2 = $finder->findRegionsByName('puglia')[0];
+        $this->assertSame('puglia', strtolower((string) $region2));
+        $province1 = $finder->getProvinceByVehicleCode('to');
+        $this->assertSame('torino', strtolower((string) $province1));
+        $province2 = $finder->getProvinceByVehicleCode('ba');
+        $this->assertSame('bari', strtolower((string) $province2));
+        $municipality1 = null;
+        foreach ($province1->getMunicipalities() as $m) {
+            if ($municipality1 === null || strlen($m->getName()) > strlen($municipality1->getName())) {
+                $municipality1 = $m;
+            }
+        }
+        $this->assertNotSame('', (string) $municipality1);
+        $municipality2 = null;
+        foreach ($province2->getMunicipalities() as $m) {
+            if ($municipality2 === null || strlen($m->getName()) > strlen($municipality2->getName())) {
+                $municipality2 = $m;
+            }
+        }
+        $this->assertNotSame('', (string) $municipality2);
+
+        $found = array_map('strval', $finder->findRegionsByName($region1->getName()));
+        $this->assertCount(1, $found);
+        $found = array_map('strval', $finder->findRegionsByName($region1->getName(), false, $geographicalSubdivision1));
+        $this->assertCount(1, $found);
+        $found = array_map('strval', $finder->findRegionsByName($region1->getName(), false, $geographicalSubdivision2));
+        $this->assertSame([], $found);
+
+        $found = array_map('strval', $finder->findRegionsByName($region1->getName(), false, $region1));
+        $this->assertSame([], $found);
+        $found = array_map('strval', $finder->findRegionsByName($region1->getName(), false, $province1));
+        $this->assertSame([], $found);
+
+        $found = array_map('strval', $finder->findProvincesByName($province1->getName()));
+        $this->assertCount(1, $found);
+        $found = array_map('strval', $finder->findProvincesByName($province1->getName(), false, $geographicalSubdivision1));
+        $this->assertCount(1, $found);
+        $found = array_map('strval', $finder->findProvincesByName($province1->getName(), false, $geographicalSubdivision2));
+        $this->assertSame([], $found);
+        $found = array_map('strval', $finder->findProvincesByName($province1->getName(), false, $region1));
+        $this->assertCount(1, $found);
+        $found = array_map('strval', $finder->findProvincesByName($province1->getName(), false, $region2));
+        $this->assertSame([], $found);
+        $found = array_map('strval', $finder->findProvincesByName($province1->getName(), false, $province1));
+        $this->assertSame([], $found);
+
+        $found = array_map('strval', $finder->findMunicipalitiesByName($municipality1->getName()));
+        $this->assertCount(1, $found);
+        $found = array_map('strval', $finder->findMunicipalitiesByName($municipality1->getName(), false, $geographicalSubdivision1));
+        $this->assertCount(1, $found);
+        $found = array_map('strval', $finder->findMunicipalitiesByName($municipality1->getName(), false, $geographicalSubdivision2));
+        $this->assertSame([], $found);
+        $found = array_map('strval', $finder->findMunicipalitiesByName($municipality1->getName(), false, $region1));
+        $this->assertCount(1, $found);
+        $found = array_map('strval', $finder->findMunicipalitiesByName($municipality1->getName(), false, $region2));
+        $this->assertSame([], $found);
+        $found = array_map('strval', $finder->findMunicipalitiesByName($municipality1->getName(), false, $province1));
+        $this->assertCount(1, $found);
+        $found = array_map('strval', $finder->findMunicipalitiesByName($municipality1->getName(), false, $province2));
+        $this->assertSame([], $found);
     }
 
     private function getFinder(): Finder
