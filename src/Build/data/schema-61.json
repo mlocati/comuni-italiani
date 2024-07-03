@@ -119,7 +119,7 @@
                     },
                     "COD_COM_FISCALE": {
                         "type": ["integer", "string", "null"],
-                        "pattern": "^0?[0-9]{11}$",
+                        "pattern": "^[0-9]{11}$",
                         "minimum": 1,
                         "maximum": 99999999999
                     },
