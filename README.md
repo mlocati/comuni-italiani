@@ -5,7 +5,7 @@
 
 This PHP library contains the whole list of Italian Regions (regioni), Provinces (province/UTS), and Municipalities (comuni).
 
-The data comes from the official [Situas](https://situas.istat.it) service of the Istituto nazionale di statistica (Istat), that publishes its data with the [Creative Commons  versione 4.0 Deed](https://creativecommons.org/licenses/by/4.0/deed) license.
+The data comes from the official [Situas](https://situas.istat.it) service of the Istituto nazionale di statistica (Istat), that publishes its data with the [CC-BY-4.0 license](https://creativecommons.org/licenses/by/4.0/) .
 
 ### Installation
 
@@ -49,7 +49,7 @@ This library provides the following data:
     - Special Status (*regione a statuto speciale*)
   - the Fiscal Code (*codice fiscale*) assigned by the Agenzia delle Entrate (example: `'80087670016'`)
   - the second level of the current Nomenclature of Territorial Units for Statistics (NUTS2) (example: `'ITC1'`)
-  - the Capital Municipality of this Region (*capoluogo di regione*) (example: `Torino`)
+  - the Capital Municipality of this Region (*capoluogo di regione*) (example: `'Torino'`)
   - the list of Provinces/UTS
 - for the **Provinces** / **UTS**
   - the parent Region
@@ -65,7 +65,7 @@ This library provides the following data:
   - the vehicle code (*sigla automobilistica*) (example: `'TO'`)
   - the Fiscal Code (*codice fiscale*) assigned by the Agenzia delle Entrate (example: `'01907990012'`)
   - the third level of the current Nomenclature of Territorial Units for Statistics (NUTS3) (example: `'ITC11'`)
-  - the Capital Municipalities of this Province/UTS (*capoluogo di provincia*) (example: `Torino`)
+  - the Capital Municipalities of this Province/UTS (*capoluogo di provincia*) (example: `'Torino'`)
   - the list of Municipalities
 - for the **Municipalities**
   - the parent Province/UTS
