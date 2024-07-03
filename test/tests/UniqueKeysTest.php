@@ -95,10 +95,6 @@ class UniqueKeysTest extends TerritoryTestCase
             ['getID'],
             ['getCadastralCode'],
             ['getFiscalCode', [
-                '028108', // Santa Caterina d'Este (PD)
-                '025075', // Setteville (BL)
-                '024128', // Sovizzo (VI)
-                '013256', // Uggiate con Ronago (CO)
             ]],
             ['__toString'],
         ];

@@ -5011,6 +5011,7 @@ return [
                                 'id' => '256',
                                 'name' => 'Uggiate con Ronago',
                                 'cadastralCode' => 'M435',
+                                'fiscalCode' => '04137960136',
                             ],
                             [
                                 'id' => '233',
@@ -24257,6 +24258,7 @@ return [
                                 'id' => '075',
                                 'name' => 'Setteville',
                                 'cadastralCode' => 'M437',
+                                'fiscalCode' => '91021680250',
                             ],
                             [
                                 'id' => '056',
@@ -24819,6 +24821,7 @@ return [
                                 'id' => '108',
                                 'name' => 'Santa Caterina d\'Este',
                                 'cadastralCode' => 'M438',
+                                'fiscalCode' => '05598790284',
                             ],
                             [
                                 'id' => '080',
@@ -27280,6 +27283,7 @@ return [
                                 'id' => '128',
                                 'name' => 'Sovizzo',
                                 'cadastralCode' => 'M436',
+                                'fiscalCode' => '04506950247',
                             ],
                             [
                                 'id' => '104',

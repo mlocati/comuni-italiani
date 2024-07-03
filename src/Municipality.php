@@ -108,7 +108,7 @@ final class Municipality implements Territory
      */
     public function getFiscalCode(): string
     {
-        return $this->data['fiscalCode'] ?? '';
+        return $this->data['fiscalCode'];
     }
 
     /**
