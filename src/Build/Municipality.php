@@ -49,12 +49,7 @@ final class Municipality
         $this->isRegionalCapital = $data->CC_REG === 1;
         $this->isProvinceCapital = $data->CC_UTS === 1;
         $this->cadastralCode = $data->COD_CATASTO;
-        $fiscalCode = ltrim((string) $data->COD_COM_FISCALE, '0');
-        $len = strlen($fiscalCode);
-        if ($len > 0 && $len < 11) {
-            $fiscalCode = str_pad($fiscalCode, 11, '0', STR_PAD_LEFT);
-        }
-        $this->fiscalCode = $fiscalCode;
+        $this->fiscalCode = str_pad((string) $data->COD_COM_FISCALE, 11, '0', STR_PAD_LEFT);
         $this->nuts1 = $data->COM_NUTS1_2024;
         $this->nuts2 = $data->COM_NUTS2_2024;
         $this->nuts3 = $data->COM_NUTS3_2024;
@@ -94,9 +89,7 @@ final class Municipality
             $result['isProvinceCapital'] = true;
         }
         $result['cadastralCode'] = $this->cadastralCode;
-        if ($this->fiscalCode !== '') {
-            $result['fiscalCode'] = $this->fiscalCode;
-        }
+        $result['fiscalCode'] = $this->fiscalCode;
         if ($this->nuts1 !== $this->province->region->geographicalSubdivision->nuts1) {
             $result['nuts1'] = $this->nuts1;
         }

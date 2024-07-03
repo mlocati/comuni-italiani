@@ -106,17 +106,7 @@ class PropertiesTest extends TerritoryTestCase
         $this->assertIsBool($municipality->isRegionalCapital());
         $this->assertIsBool($municipality->isProvinceCapital());
         $this->assertMatchesRegularExpression('/^[A-Z][0-9]{3}$/', $municipality->getCadastralCode());
-        switch ($municipality->getID()) {
-            case '028108': // Santa Caterina d'Este (PD)
-            case '025075': // Setteville (BL)
-            case '024128': // Sovizzo (VI)
-            case '013256': // Uggiate con Ronago (CO)
-                $optional = true;
-                break;
-            default:
-                $optional = false;
-        }
-        self::testFiscalCode($municipality->getFiscalCode(), $optional, "{$municipality->getID()} {$municipality}");
+        self::testFiscalCode($municipality->getFiscalCode(), false, "{$municipality->getID()} {$municipality}");
         $this->assertMatchesRegularExpression('/^IT[A-Z]$/', $municipality->getNuts1());
         $this->assertMatchesRegularExpression('/^IT[A-Z][0-9]$/', $municipality->getNuts2());
         $this->assertMatchesRegularExpression('/^IT[A-Z][0-9][0-9A-Z]$/', $municipality->getNuts3());
