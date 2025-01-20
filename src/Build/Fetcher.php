@@ -31,7 +31,7 @@ final readonly class Fetcher
     ) {
         $this->validator = new Validator();
         $resolver = $this->validator->resolver();
-        foreach([
+        foreach ([
             self::SERVICEID_GEOGRAPHICALSUBDIVISIONS,
             self::SERVICEID_REGIONS,
             self::SERVICEID_PROVINCES,
