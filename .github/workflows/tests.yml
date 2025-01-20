@@ -52,6 +52,9 @@ jobs:
             os: ubuntu-latest
             php-version: "8.3"
           -
+            os: ubuntu-latest
+            php-version: "8.4"
+          -
             os: windows-latest
             php-version: "7.4"
           -

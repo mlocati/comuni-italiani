@@ -18793,6 +18793,7 @@ return [
                             [
                                 'id' => '007',
                                 'name' => 'Cesena',
+                                'isProvinceCapital' => true,
                                 'cadastralCode' => 'C573',
                                 'fiscalCode' => '00143280402',
                             ],
@@ -31147,6 +31148,7 @@ return [
                             [
                                 'id' => '067',
                                 'name' => 'Urbino',
+                                'isProvinceCapital' => true,
                                 'cadastralCode' => 'L500',
                                 'fiscalCode' => '82004510416',
                             ],
@@ -32189,6 +32191,7 @@ return [
                             [
                                 'id' => '003',
                                 'name' => 'Carrara',
+                                'isProvinceCapital' => true,
                                 'cadastralCode' => 'B832',
                                 'fiscalCode' => '00079450458',
                             ],
