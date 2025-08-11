@@ -90,12 +90,12 @@
                     },
                     "COD_PROV_FISCALE": {
                         "type": ["string", "integer"],
-                        "pattern": "^[0-9]{11}$",
+                        "pattern": "^ ?[0-9]{11}$",
                         "minimum": 1,
                         "maximim": 99999999999
                     },
                     "COD_NUTS3_2024": {
-                        "type": "string",
+                        "type": ["string", "null"],
                         "pattern": "^IT[A-Z][0-9][0-9A-Z]$"
                     }
                 },

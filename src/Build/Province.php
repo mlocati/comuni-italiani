@@ -42,8 +42,8 @@ final class Province
         $this->oldID = str_pad((string) $data->COD_PROV_STORICO, 3, '0', STR_PAD_LEFT);
         $this->type = Province\Type::from($data->TIPO_UTS);
         $this->vehicleCode = $data->SIGLA_AUTOMOBILISTICA;
-        $this->fiscalCode = str_pad((string) $data->COD_PROV_FISCALE, 11, '0', STR_PAD_LEFT);
-        $this->nuts3 = $data->COD_NUTS3_2024;
+        $this->fiscalCode = str_pad(trim((string) $data->COD_PROV_FISCALE), 11, '0', STR_PAD_LEFT);
+        $this->nuts3 = $data->COD_NUTS3_2024 === null ? '' : $data->COD_NUTS3_2024;
     }
 
     public function checkMunicipalityData(stdClass $data): void
